@@ -20,9 +20,6 @@ geodistkm <- geodist * 0.001
 # Add greater circle distance to data, minus the south reference point
 nvs_locs$dist <- geodistkm[233,1:232]
 
-
-
-
 #### Plotting covariance between five environmental variables ####
 envs <- nvs_locs[-c(41, 96, 138, 199), c("lat", "long", "depth", "b_temp", "b_salin")]
 dim(envs)
@@ -309,6 +306,17 @@ t.stan.ll.sum
 
 # Exporting the envirofile to the Local adaptation folder on my computer
 write.table (t.stan.ll.sum, "232stanenvirofile.txt", sep ="\t", col.names = FALSE, row.names = FALSE) # manually redid the tabbing afterwards
+
+# Aggregate the individuals into populations and standardize
+by <- list(nvs_locs$bayenv_pop)
+pop.avg <- aggregate(nvs_locs[,c(7, 8, 9, 11)], by = by, FUN = mean)
+stan.pop.avg <- scale(pop.avg[,2:5])
+rownames(stan.pop.avg) <- c("Pop1", "Pop2", "Pop3", "Pop4", "Pop5")
+t.stan.pop.avg <- t(stan.pop.avg) # the order is Pop1, Pop2, Pop3, Pop4, Pop5; rows are: depth, b_temp, b_salin, dist
+
+# Exporting the envirofile to my computer
+write.table (t.stan.pop.avg, "232stan4envirofile.txt", sep ="\t", col.names = FALSE, row.names = FALSE) # manually redid the tabbing afterwards; order needs to match that of SNP frequencies (Japan, Indonesia, Philippines)
+
 
 ### Below is code for standardizing slightly incorrectly....not totally sure if it acutually makes a differences because the relative differences are the same
 g.lat.avg <- mean(nvs_locs$lat, na.rm=TRUE)
