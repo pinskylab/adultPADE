@@ -64,19 +64,31 @@ adults_test <- read.structure("structure_input_232forbayenv_randomized.str",
                              n.ind = 232, n.loc = 1137, col.lab = 1, col.pop = 2, row.marknames = 1, 
                              onerowperind = FALSE)
 
+#####################################################
+#### Randomizing environmental variables instead ####
+#####################################################
+setwd("/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation")
 
+# Read in environmental data
+nvs_locs <- read.table("232envirowithdist.txt", header=TRUE) #all 241-9=232 fish divided into 5 populations
 
+# Subset to 4 environmental variables
+envir <- nvs_locs[,c('bayenv_pop', 'dist', 'depth', 'b_temp', 'b_salin')]
 
-# Randomize everything but NA's??
-df1 <- data.frame(A=c(1,1,2,2), B=c(NA,NA,1,3), C=c(4,4,2,2), D = c(1,1,NA,NA), E= c(1,3,3,3))
-df4 <- apply(df1, 2, function(x){sample(x[!is.na(x)])})
-df2 <- apply(df1, 2, sample)
-
-df3 <- df1[is.na(df1)]
-
-df1[df1 > 0] <- 0
+#### For loop to randomize, standardize and write 10 environmental matrices ####
+for (i in 1:10){
   
-x <- c(NA, 3, NA, 5)
-x[!is.na(x)]
+# Randomize environmental variables
+envir2 <- apply(envir[,-1],2, sample)
 
+# Aggregate the individuals into populations and standardize
+by <- list(nvs_locs$bayenv_pop)
+pop.avg <- aggregate(envir2, by = by, FUN = mean)
+stan.pop.avg <- scale(pop.avg[,2:5])
+rownames(stan.pop.avg) <- c("Pop1", "Pop2", "Pop3", "Pop4", "Pop5")
+t.stan.pop.avg <- t(stan.pop.avg) # the order is Pop1, Pop2, Pop3, Pop4, Pop5; rows are: dist, depth, b_temp, b_salin
 
+# Exporting the randomized envirofiles to my computer in a randomization folder
+write.table (t.stan.pop.avg, paste("~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/232stan4envirofile", i,".txt", sep = ""), sep ="\t", col.names = FALSE, row.names = FALSE)
+
+}
