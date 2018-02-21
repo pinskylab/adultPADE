@@ -426,6 +426,12 @@ binom.test(6, 1137, mean(depth)/1137) # Depth
 binom.test(10, 1137, mean(bottomtemp)/1137) # Bottom Temp
 binom.test(6, 1137, mean(bottomsalin)/1137) # Bottom Salinity
 
+# Exact binomial test treating all locus x permutations as independent, this results in the same pvalues as above
+binom.test(9, 1137, sum(distance)/(10*1137)) # Distace from southern point
+binom.test(6, 1137, sum(depth)/(10*1137)) # Depth
+binom.test(10, 1137, sum(bottomtemp)/(10*1137)) # Bottom Temp
+binom.test(6, 1137, sum(bottomsalin)/(10*1137)) # Bottom Salinity
+
 binom.test(14, 1137, mean(c(17, 29, 24, 27, 21, 32, 15, 29, 22, 18))/1137) # all loci together across environmental variables, prob not best method because certain environmental variables (bottom temp, distance from a southern point) may be swamped out
 
 #####################################################
@@ -563,16 +569,256 @@ ks2 <- ks.test(all.randomized.medians.mean[,'depth'], full_array_median[,"depth"
 ks3 <- ks.test(all.randomized.medians.mean[,'b_temp'], full_array_median[,"b_temp"])
 ks4 <- ks.test(all.randomized.medians.mean[,'b_salin'], full_array_median[,"b_salin"])
 
+png(file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/CDF_plots.png", width=8, height=8, res=300, units="in")
 par(mfrow = c(2,2))
-plot.ecdf(log10(all.randomized.medians.mean[,'dist']), main = 'Distance from southern point', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')))
+plot.ecdf(log10(all.randomized.medians.mean[,'dist']), main = 'Distance from southern point', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
 plot.ecdf(log10(full_array_median[,"dist"]), col = 'tomato', add = TRUE)
-text(0.1, 0.2,  paste('D = ', round(ks1$statistic, 3), '\n p-value =', round(ks1$p.value, 7)))
-plot.ecdf(log10(all.randomized.medians.mean[,'depth']), main = 'Depth', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')))
+# text(0.1, 0.2, paste('D = ', round(ks1$statistic, 3), '\n p-value <',round(ks1$p.value, 9)))
+text(0.32, 0.6, paste('D = ', round(ks1$statistic, 3)))
+text(0.32, 0.52, expression('p-value = 5.57x10'^-07))
+
+plot.ecdf(log10(all.randomized.medians.mean[,'depth']), main = 'Depth', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
 plot.ecdf(log10(full_array_median[,"depth"]), col = 'tomato', add = TRUE)
-text(0.1, 0.2,  paste('D = ', round(ks2$statistic, 4), '\n p-value =', round(ks2$p.value, 8)))
-plot.ecdf(log10(all.randomized.medians.mean[,'b_temp']), main = 'Bottom Temperature', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')))
+# text(0.1, 0.2,  paste('D = ', round(ks2$statistic, 4), '\n p-value <', round(ks2$p.value, 9)))
+text(0.32, 0.6, paste('D = ', round(ks2$statistic, 3)))
+text(0.32, 0.52, expression('p-value = 2.40x10'^-08))
+
+plot.ecdf(log10(all.randomized.medians.mean[,'b_temp']), main = 'Bottom Temperature', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
 plot.ecdf(log10(full_array_median[,"b_temp"]), col = 'tomato', add = TRUE)
-text(0.1, 0.2,  paste('D = ', round(ks3$statistic, 4), '\n p-value =', round(ks3$p.value, 9)))
-plot.ecdf(log10(all.randomized.medians.mean[,'b_salin']), main = 'Bottom Salinity', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')))
+# text(0.1, 0.2,  paste('D = ', round(ks3$statistic, 4), '\n p-value <', round(ks3$p.value, 9)))
+text(0.32, 0.6, paste('D = ', round(ks3$statistic, 3)))
+text(0.32, 0.52, expression('p-value = 2.29x10'^-09))
+
+plot.ecdf(log10(all.randomized.medians.mean[,'b_salin']), main = 'Bottom Salinity', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
 plot.ecdf(log10(full_array_median[,"b_salin"]), col = 'tomato', add = TRUE)
-text(0.1, 0.2,  paste('D = ', round(ks4$statistic, 3), '\n p-value =', round(ks4$p.value, 14)))
+# text(0.1, 0.2,  paste('D = ', round(ks4$statistic, 3), '\n p-value <', round(ks4$p.value, 14)))
+text(0.32, 0.6, paste('D = ', round(ks4$statistic, 3)))
+text(0.32, 0.52, expression('p-value = 6.32x10'^-14))
+
+legend("bottomright", legend = c('permuted', 'observed'), lty = c(1,1), col = c('black', 'tomato'))
+
+dev.off()
+
+# Exact binomial test using mean of 10 random permutations vs observed data for each environmental variable
+# of 'successes', # of trials, prob of success from randomized data
+binom.test(9, 1137, length(which(all.randomized.medians.mean[,'dist'] > 3))/1137, alternative = 'greater') # Distace from southern point
+binom.test(6, 1137, length(which(all.randomized.medians.mean[,'depth'] > 3))/1137, alternative = 'greater') # Depth
+binom.test(10, 1137, length(which(all.randomized.medians.mean[,'b_temp'] > 3))/1137, alternative = 'greater') # Bottom Temp
+binom.test(6, 1137, length(which(all.randomized.medians.mean[,'b_salin'] > 3))/1137, alternative = 'greater') # Bottom Salinity
+
+binom.test(9, 1137, length(which(all.randomized.medians.mean[,'dist'] > 3))/1137) # Distace from southern point
+binom.test(6, 1137, length(which(all.randomized.medians.mean[,'depth'] > 3))/1137) # Depth
+binom.test(10, 1137, length(which(all.randomized.medians.mean[,'b_temp'] > 3))/1137) # Bottom Temp
+binom.test(6, 1137, length(which(all.randomized.medians.mean[,'b_salin'] > 3))/1137) # Bottom Salinity
+
+binom.test(34, 1825, 9/1825, alternative = 'g')
+x <- all.randomized.medians.mean[,'dist']
+y <- dbinom(all.randomized.medians.mean[,'dist'], 1137, length(which(all.randomized.medians.mean[,'dist'] > 3))/1137)
+plot(x, y)
+
+#############################################
+####           Randomizing RDA           ####
+#############################################
+# Bringing in adult genotype data
+setwd("/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis")
+
+library(ade4)
+library(adegenet)
+library(devtools)
+library("hierfstat")
+library(pegas)
+library(fields)
+library(vegan)
+library(plotrix)
+
+# Reading in SNP data file containing only the first SNP at each locus
+adults <- read.structure("structure_input_Nov_11_2015.str",
+                         n.ind = 241, n.loc = 1137, col.lab = 1, col.pop = 2, row.marknames = 1, 
+                         onerowperind = FALSE)
+
+which(adults@loc.n.all > 2) # which snps have more than 2 alelles?
+
+adults.nonas <- scaleGen(adults, center = TRUE, scale = FALSE, NA.method = "mean") # filling in NAs with allele frequencies and centering
+hist(adults.nonas)
+sum(is.na(adults.nonas)) #0 All NAs have been replaced with means
+
+exclu_names <- c("PADE_14230L1439",
+                 "PADE_14231L1440",
+                 "PADE_14232L1529",
+                 "PADE_14233L1588",
+                 "PADE_14234L1441",
+                 "PADE_14235L1442",
+                 "PADE_14236L1530",
+                 "PADE_14237L1531",
+                 "PADE_14238L1532") # Creating a list of IDs to exclude from the genetic matrix
+
+adults.nonas.232 <- adults.nonas[ ! rownames(adults.nonas) %in% exclu_names, ] # This is genotype data for 232 fish where NAs have been replaced by mean allele frequencies
+rownames(adults.nonas.232)
+adults.nonas.232.2274 <- adults.nonas.232[, -c(56, 96, 734, 2115)] # SNP 28, 47, 366 and 1056 have 3 alleles. All the rest have 2. Need to remove 3rd allele for SNP 28, 47, 366 and 1056. Removing one with lowest count
+dim(adults.nonas.232.2274)
+adults.nonas.232.1137 <- adults.nonas.232.2274[, seq(1, ncol(adults.nonas.232.2274),by = 2)] # including every other column
+dim(adults.nonas.232.1137)
+
+# On Amphiprion
+setwd("~/24_RDA_rand")
+# write.table(adults.nonas.232.1137, "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Redundancy analysis/adults.nonas.232.1137.txt", sep = '\t')
+adults.nonas.232.1137 <- read.table("adults.nonas.232.1137.txt", header = TRUE)
+
+# Bringing in environmental data
+# setwd("/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation")
+envi <- read.table("232envirowithdist.txt", header = TRUE)
+envi.ordered <- envi[with(envi, order(PinskyID)), c('PinskyID', 'dist', 'depth', 'b_temp', 'b_salin')] # Subset to 4 environmental variables
+as.character(envi.ordered[,1]) == rownames(adults.nonas.232.1137)
+
+#### For loop to do emperical p-values ####
+# Function to calculate p-values that's needed in the for loop below
+lmp <- function (modelobject) {
+  if (class(modelobject) != "lm") stop("Not an object of class 'lm' ")
+  f <- summary(modelobject)$fstatistic
+  p <- pf(f[1],f[2],f[3],lower.tail=F)
+  attributes(p) <- NULL
+  return(p)
+}
+
+rda.cans.dist <- vector()
+locusenvi.cans <- vector()
+for (j in 1:10000){
+envi.ordered2 <- apply(envi.ordered[,-1],2, sample) # randomize environmental variables
+envi.ordered.matrix <- scale(data.matrix(envi.ordered2))
+rownames(envi.ordered.matrix) <- envi.ordered[,"PinskyID"]
+# envi.ordered.matrix[,1] <- envi.ordered[,1]
+
+envi.ordered.matrix <- as.data.frame(envi.ordered.matrix)
+adults.rda2 <- rda(adults.nonas.232.1137 ~ dist + depth + b_temp + b_salin, envi.ordered.matrix, scale = FALSE)
+
+spp.scr2 <- scores(adults.rda2, display = "species", scaling = 0, choices = c(1,2,3,4))
+
+# Forester et al. (2016) used loci with scores +/- 3 SD from mean score for that axis to ID outlier loci. Only used first 3 axes.
+mean.rda <- colMeans(spp.scr2)
+sd.rda1 <- sd(spp.scr2[,"RDA1"])
+sd.rda2 <- sd(spp.scr2[,"RDA2"])
+sd.rda3 <- sd(spp.scr2[,"RDA3"])
+
+rda1.hi <- mean.rda[1] + 3*sd.rda1
+rda1.lo <- mean.rda[1] - 3*sd.rda1
+which(spp.scr2[,"RDA1"] > rda1.hi)
+which(spp.scr2[,"RDA1"] < rda1.lo)
+
+rda2.hi <- mean.rda[2] + 3*sd.rda2
+rda2.lo <- mean.rda[2] - 3*sd.rda2
+which(spp.scr2[,"RDA2"] > rda2.hi)
+which(spp.scr2[,"RDA2"] < rda2.lo)
+
+rda3.hi <- mean.rda[3] + 3*sd.rda3
+rda3.lo <- mean.rda[3] - 3*sd.rda3
+which(spp.scr2[,"RDA3"] > rda3.hi)
+which(spp.scr2[,"RDA3"] < rda3.lo)
+
+rda.cans <- c((which(spp.scr2[,"RDA1"] > rda1.hi)),
+              (which(spp.scr2[,"RDA1"] < rda1.lo)),
+              (which(spp.scr2[,"RDA2"] > rda2.hi)),
+              (which(spp.scr2[,"RDA2"] < rda2.lo)),
+              (which(spp.scr2[,"RDA3"] > rda3.hi)),
+              (which(spp.scr2[,"RDA3"] < rda3.lo)))
+              
+rda.cans.dist[j] <- length(unique(sort(rda.cans)))
+
+# Create a vector of all lm names - needs to reflect order that lms are in the list
+names_lms <- vector()
+for(i in rda.cans){
+  names_lms <- append(names_lms, paste0('dist',i))
+}
+
+for(i in rda.cans){
+  names_lms <- append(names_lms, paste0('depth',i))
+}
+
+for(i in rda.cans){
+  names_lms <- append(names_lms, paste0('btemp',i))
+}
+
+for(i in rda.cans){
+  names_lms <- append(names_lms, paste0('bsalin',i))
+}
+
+# For loop to regress all RDA candidates against 4 enviromental variables
+lms.dist <- lapply(rda.cans, function(x) lm(adults.nonas.232.1137[,x] ~ envi.ordered.matrix[,"dist"]))
+lms.depth <- lapply(rda.cans, function(x) lm(adults.nonas.232.1137[,x] ~ envi.ordered.matrix[,"depth"]))
+lms.bt <- lapply(rda.cans, function(x) lm(adults.nonas.232.1137[,x] ~ envi.ordered.matrix[,"b_temp"]))
+lms.bs <- lapply(rda.cans, function(x) lm(adults.nonas.232.1137[,x] ~ envi.ordered.matrix[,"b_salin"]))
+
+all.lms <- c(lms.dist, lms.depth, lms.bt, lms.bs)
+
+# for(i in rda.cans){
+#   assign(paste0('dist',i), lm(adults.nonas.232.1137[,i] ~ envi.ordered.matrix[,"dist"]))
+#   assign(paste0('depth',i), lm(adults.nonas.232.1137[,i] ~ envi.ordered.matrix[,"depth"]))
+#   assign(paste0('btemp',i), lm(adults.nonas.232.1137[,i] ~ envi.ordered.matrix[,"b_temp"]))
+#   assign(paste0('bsalin',i), lm(adults.nonas.232.1137[,i] ~ envi.ordered.matrix[,"b_salin"]))
+# }
+
+
+# Using the list of lm objects to put each into the lmp function to calculate p-values
+pvalues <- vector()
+for (i in 1:length(all.lms)){
+  pvalues[i] <- lmp(all.lms[[i]])
+}
+
+rda.can.loci <- data.frame(names_lms,pvalues)
+rda.can.loci2 <- rda.can.loci[which(rda.can.loci[,2] < 0.001),]
+
+locusenvi.cans[j] <- nrow(rda.can.loci2)
+}
+
+#### Calculate emperical p-values ####
+# Get R to tell me the number of simulations (# of loci > 3 & # of loci > 3 and p-value < 0.001) that are larger than observed values & calculate proportion (p value = (r+1)/((n+1)))
+# Number of loci > 3
+rda.cans.dist # should be of length 10,000
+locusenvi.cans # should be of length 10,000
+
+# save(rda.cans.dist, file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Redundancy analysis/randomization/rda.cans.dist.RData")
+# save(locusenvi.cans, file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Redundancy analysis/randomization/locusenvi.cans.RData")
+
+rda.cans.dist.pvalue <- (length(which(rda.cans.dist >= 23))+1)/(length(rda.cans.dist)+1) # p-value = 0.3617638
+
+# Number of loci > 3 & p-value < 0.001
+locusenvi.cans.pvalue <- (length(which(locusenvi.cans >= 5))+1)/(length(locusenvi.cans)+1) # p-value = 0.04429557
+
+#### Plot emperical p-value distributions ####
+png(file = "~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Redundancy analysis/randomization/loci3SDfrommean.png", width=6, height=10, res=300, units="in")
+
+par(
+  mfrow = c(2, 1), 
+  mar=c(5, 4, 1.3, 0.7), # panel magin size in "line number" units
+  mgp=c(2, 1, 0), # default is c(3,1,0); line number for axis label, tick label, axis
+  tcl=-0.5, # size of tick marks as distance INTO figure (negative means pointing outward)
+  cex=1, # character expansion factor; keep as 1; if you have a many-panel figure, they start changing the default!
+  ps=12, # point size, which is the font size
+  bg=NA
+)
+
+hist(rda.cans.dist, main = '', breaks = 25, xlab = 'Number of RDA outliers', ylab = 'Count', ylim = c(0,1200))
+ablineclip(v = 23, col = 'tomato', y1=0, y2=1100) # observed number of loci
+text(23,1100, pos = 4, paste('Observed # of loci = 23 \n p-value =', round(rda.cans.dist.pvalue,3)))
+
+hist(locusenvi.cans, breaks = 10, main = '', xlab = 'Number of RDA outliers with a strong environmental association', ylab = 'Count')
+ablineclip(v = 5, col = 'tomato', y1=0, y2=3500) # oberved number of loci w/ strong enviornmental associations
+text(5,3500, pos = 4, paste('Observed # of loci = 5 \n p-value =', round(locusenvi.cans.pvalue,3)))
+
+dev.off()
+
+################################
+
+# Long way of calculating p-values for RDA outliers
+pvalues <- c(lmp(dist7), lmp(depth7), lmp(btemp7), lmp(bsalin7), lmp(dist168), lmp(depth168),  lmp(btemp168),  lmp(bsalin168),  lmp(dist248),  lmp(depth248),   lmp(btemp248),  lmp(bsalin248),
+             lmp(dist290), lmp(depth290), lmp(btemp290), lmp(bsalin290), lmp(dist300), lmp(depth300),  lmp(btemp300),  lmp(bsalin300),  lmp(dist311),  lmp(depth311),   lmp(btemp311),  lmp(bsalin311),
+             lmp(dist334), lmp(depth334), lmp(btemp334), lmp(bsalin334), lmp(dist353), lmp(depth353),  lmp(btemp353),  lmp(bsalin353),  lmp(dist360),  lmp(depth360),   lmp(btemp360),  lmp(bsalin360),
+             lmp(dist392), lmp(depth392), lmp(btemp392), lmp(bsalin392), lmp(dist395), lmp(depth395),  lmp(btemp395),  lmp(bsalin395),  lmp(dist524),  lmp(depth524),   lmp(btemp524),  lmp(bsalin524),
+             lmp(dist551), lmp(depth551), lmp(btemp551), lmp(bsalin551), lmp(dist565), lmp(depth565),  lmp(btemp565),  lmp(bsalin565),  lmp(dist578),  lmp(depth578),   lmp(btemp578),  lmp(bsalin578),
+             lmp(dist696), lmp(depth696), lmp(btemp696), lmp(bsalin696), lmp(dist705), lmp(depth705),  lmp(btemp705),  lmp(bsalin705),  lmp(dist810),  lmp(depth810),   lmp(btemp810),  lmp(bsalin810),
+             lmp(dist849), lmp(depth849), lmp(btemp849), lmp(bsalin849), lmp(dist939), lmp(depth939),  lmp(btemp939),  lmp(bsalin939),  lmp(dist985),  lmp(depth985),   lmp(btemp985),  lmp(bsalin985),
+             lmp(dist997), lmp(depth997), lmp(btemp997), lmp(bsalin997), lmp(dist1070), lmp(depth1070),  lmp(btemp1070),  lmp(bsalin1070)
+)
+
+rda.can.loci <- data.frame(names_lms,pvalues)
+rda.can.loci2 <- rda.can.loci[which(rda.can.loci[,2] < 0.001),]
+
