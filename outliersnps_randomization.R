@@ -460,14 +460,14 @@ par(
   bg=NA
 )
 
-# Distance from southern point
+# Distance
 dist.perm <- table(factor(findInterval(all.randomized.medians.mean[,'dist'], seq(0,9, by = 1)), levels = 1:9))
 dist.obs <- table(factor(findInterval(full_array_median[,"dist"], seq(0,9, by = 1)), levels = 1:9))
 dist.diffs <- dist.obs - dist.perm # needs to contain zeros
 dist.perm[5:9] <- NA # so count isn't zero when log10
 dist.obs[c(6,8)] <- NA # so count isn't zero when log10
 dist.all <- log10(rbind(dist.perm, dist.obs))
-barplot(dist.all, beside = TRUE, ylab = '', main = 'Distance from southern point', col = c('gray60', 'white'), yaxt = 'n', xaxt = 'n', ylim = c(0,3.2))
+barplot(dist.all, beside = TRUE, ylab = '', main = 'Distance', col = c('gray60', 'white'), yaxt = 'n', xaxt = 'n', ylim = c(0,3.2))
 axis(1, at=seq(2,30, by = 3), labels = FALSE)
 text(c(2, 5,  8, 11, 14, 17, 20, 23, 26), -0.4, c('0.0-0.99','1.0-1.99', '2.0-2.99','3.0-3.99', '4.0-4.99', '5.0-5.99','6.0-6.99', '7.0-7.99', '> 8.0'), srt = 45, xpd = TRUE, cex = 0.89)
 mtext("Bayes Factor", side = 1, line = 3.3)
@@ -571,7 +571,7 @@ ks4 <- ks.test(all.randomized.medians.mean[,'b_salin'], full_array_median[,"b_sa
 
 png(file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/CDF_plots.png", width=8, height=8, res=300, units="in")
 par(mfrow = c(2,2))
-plot.ecdf(log10(all.randomized.medians.mean[,'dist']), main = 'Distance from southern point', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
+plot.ecdf(log10(all.randomized.medians.mean[,'dist']), main = 'Distance', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
 plot.ecdf(log10(full_array_median[,"dist"]), col = 'tomato', add = TRUE)
 # text(0.1, 0.2, paste('D = ', round(ks1$statistic, 3), '\n p-value <',round(ks1$p.value, 9)))
 text(0.32, 0.6, paste('D = ', round(ks1$statistic, 3)))
@@ -583,13 +583,13 @@ plot.ecdf(log10(full_array_median[,"depth"]), col = 'tomato', add = TRUE)
 text(0.32, 0.6, paste('D = ', round(ks2$statistic, 3)))
 text(0.32, 0.52, expression('p-value = 2.40x10'^-08))
 
-plot.ecdf(log10(all.randomized.medians.mean[,'b_temp']), main = 'Bottom Temperature', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
+plot.ecdf(log10(all.randomized.medians.mean[,'b_temp']), main = 'Bottom temperature', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
 plot.ecdf(log10(full_array_median[,"b_temp"]), col = 'tomato', add = TRUE)
 # text(0.1, 0.2,  paste('D = ', round(ks3$statistic, 4), '\n p-value <', round(ks3$p.value, 9)))
 text(0.32, 0.6, paste('D = ', round(ks3$statistic, 3)))
 text(0.32, 0.52, expression('p-value = 2.29x10'^-09))
 
-plot.ecdf(log10(all.randomized.medians.mean[,'b_salin']), main = 'Bottom Salinity', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
+plot.ecdf(log10(all.randomized.medians.mean[,'b_salin']), main = 'Bottom salinity', ylab = 'Proportion of BFs', xlab = expression(paste('log'[10], '(Bayes Factor)')), xlim = c(-1,1))
 plot.ecdf(log10(full_array_median[,"b_salin"]), col = 'tomato', add = TRUE)
 # text(0.1, 0.2,  paste('D = ', round(ks4$statistic, 3), '\n p-value <', round(ks4$p.value, 14)))
 text(0.32, 0.6, paste('D = ', round(ks4$statistic, 3)))
@@ -788,21 +788,23 @@ png(file = "~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Redunda
 
 par(
   mfrow = c(2, 1), 
-  mar=c(5, 4, 1.3, 0.7), # panel magin size in "line number" units
+  mar=c(3.5, 4, 2, 0.7), # panel magin size in "line number" units
   mgp=c(2, 1, 0), # default is c(3,1,0); line number for axis label, tick label, axis
   tcl=-0.5, # size of tick marks as distance INTO figure (negative means pointing outward)
   cex=1, # character expansion factor; keep as 1; if you have a many-panel figure, they start changing the default!
-  ps=12, # point size, which is the font size
+  ps=13.5, # point size, which is the font size
   bg=NA
 )
 
 hist(rda.cans.dist, main = '', breaks = 25, xlab = 'Number of RDA outliers', ylab = 'Count', ylim = c(0,1200))
 ablineclip(v = 23, col = 'tomato', y1=0, y2=1100) # observed number of loci
 text(23,1100, pos = 4, paste('Observed # of loci = 23 \n p-value =', round(rda.cans.dist.pvalue,3)))
+mtext(expression(bold('A')), side = 2, line = 3, padj = -13, las = 1)
 
 hist(locusenvi.cans, breaks = 10, main = '', xlab = 'Number of RDA outliers with a strong environmental association', ylab = 'Count')
 ablineclip(v = 5, col = 'tomato', y1=0, y2=3500) # oberved number of loci w/ strong enviornmental associations
 text(5,3500, pos = 4, paste('Observed # of loci = 5 \n p-value =', round(locusenvi.cans.pvalue,3)))
+mtext(expression(bold('B')), side = 2, line = 3, padj = -13, las = 1)
 
 dev.off()
 
