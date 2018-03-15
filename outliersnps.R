@@ -532,28 +532,28 @@ hist(full_array_median[,4], xlab="", ylab = "", main = "", breaks=11, xlim=c(0,1
 axis(side=1, at=seq(0,11, 1), labels=seq(0,11,1), line=1.3)
 rug(jitter(full_array_median[,4]), ticksize = -0.1, line=-0.2)
 text(5.5,800, paste("max BF = 8.85"))
-text(5.5,950, paste("Distance from \nsouthern point"), cex = 1.3)
+text(5.5,950, paste("Distance"), cex = 1.3)
 mtext("Bayes Factor", side = 1, line = 3.6)
 mtext("Frequency", side = 2, line = 2.7)
 hist(full_array_median[,1], xlab="", ylab = "", main = "", breaks=11, xlim=c(0,11), xaxt="n")
 axis(side=1, at=seq(0,11, 1), labels=seq(0,11,1), line=1.3)
 rug(jitter(full_array_median[,1]), ticksize = -0.1, line=-0.2)
-text(5.5,700, paste("max BF = 6.85"))
-text(5.5,850, paste("Depth"), cex = 1.3)
+text(5.5,650, paste("max BF = 6.85"))
+text(5.5,800, paste("Depth"), cex = 1.3)
 mtext("Bayes Factor", side = 1, line = 3.6)
 mtext("Frequency", side = 2, line = 2.7)
 hist(full_array_median[,2], xlab="", ylab = "", main = "", breaks=11, xlim=c(0,11), xaxt="n")
 axis(side=1, at=seq(0,11, 1), labels=seq(0,11,1), line=1.3)
 rug(jitter(full_array_median[,2]), ticksize = -0.1, line=-0.2)
 text(5.5,800, paste("max BF = 10.59"))
-text(5.5,950, paste("Bottom Temperature"), cex = 1.3)
+text(5.5,950, paste("Bottom temperature"), cex = 1.3)
 mtext("Bayes Factor", side = 1, line = 3.6)
 mtext("Frequency", side = 2, line = 2.7)
 hist(full_array_median[,3], xlab="", ylab = "", main = "", breaks=12, xlim=c(0,11), xaxt="n")
 axis(side=1, at=seq(0,11, 1), labels=seq(0,11,1), line=1.3)
 rug(jitter(full_array_median[,3]), ticksize = -0.1, line=-0.2)
 text(5.5,800, paste("max BF = 9.86"))
-text(5.5,950, paste("Bottom Salinity"), cex = 1.3)
+text(5.5,950, paste("Bottom salinity"), cex = 1.3)
 mtext("Bayes Factor", side = 1, line = 3.6)
 mtext("Frequency", side = 2, line = 2.7)
 
@@ -623,6 +623,7 @@ dim(adults.nonas.232.2274)
 adults.nonas.232.1137 <- adults.nonas.232.2274[, seq(1, ncol(adults.nonas.232.2274),by = 2)] # including every other column
 # adults.nonas.232.1137 <- adults.nonas.232.2274[, -seq(1, ncol(adults.nonas.232.2274),by = 2)] # excluding every other column
 dim(adults.nonas.232.1137)
+# write.table(adults.nonas.232.1137, "~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/GAM/232fish1137alleles_notcentered.txt", sep = "\t", col.names = TRUE, row.names = TRUE)
 # adults.hell.232 <- adults.hell[ ! rownames(adults.hell) %in% exclu_names, ] # This is genotype data for 232 fish where NAs have been replaced by mean allele frequencies and then a Hellinger transformation has been applied
 # rownames(adults.hell.232)
 
@@ -687,6 +688,11 @@ plot(adults.rda, scaling = 3)
 plot(adults.rda, xlim = c(-0.1,0.1), ylim = c(-0.1,0.1))
 anova(adults.rda)
 anova(adults.rda, by="axis", step=1000)
+
+# To get values proportional to eigenvalues
+ev <- sfs_pca$sdev^2
+ev.varprop <- ev/sum(ev)
+ev.varprop[1:25]
 
 plot(adults.rda, choices = c(1,2), scaling=2)
 plot(adults.rda, choices = c(1,3), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
@@ -824,7 +830,7 @@ mean.rda <- colMeans(spp.scr)
 sd.rda1 <- sd(spp.scr[,"RDA1"])
 sd.rda2 <- sd(spp.scr[,"RDA2"])
 sd.rda3 <- sd(spp.scr[,"RDA3"])
-sd.rda4 <- sd(spp.scr[,"RDA4"])
+# sd.rda4 <- sd(spp.scr[,"RDA4"])
 
 rda1.hi <- mean.rda[1] + 3*sd.rda1
 rda1.lo <- mean.rda[1] - 3*sd.rda1
@@ -857,8 +863,8 @@ rda.cans <- c((which(spp.scr[,"RDA1"] > rda1.hi)),
               (which(spp.scr[,"RDA2"] < rda2.lo)),
               (which(spp.scr[,"RDA3"] > rda3.hi)),
               (which(spp.scr[,"RDA3"] < rda3.lo))
-#               (which(spp.scr[,"RDA4"] > rda4.hi)),
-#               (which(spp.scr[,"RDA4"] < rda4.lo)),
+              # (which(spp.scr[,"RDA4"] > rda4.hi)),
+              # (which(spp.scr[,"RDA4"] < rda4.lo))
 #               (which(spp.scr[,"RDA5"] > rda5.hi)),
 #               (which(spp.scr[,"RDA5"] < rda5.lo))
               )
@@ -991,6 +997,8 @@ lmp <- function (modelobject) {
   return(p)
 }
 
+# cor.test(adults.nonas.232.1137[,43], envi.ordered.matrix[,'depth']) # results in same pvalues and using lmp()
+
 pvals <- c(lmp(dist43),lmp(depth43),lmp(btemp43),lmp(bsalin43),lmp(dist47),lmp(depth47),lmp(btemp47),lmp(bsalin47), lmp(dist125), lmp(depth125),lmp(btemp125),lmp(bsalin125), 
            lmp(dist291),lmp(depth291),lmp(btemp291),lmp(bsalin291), lmp(dist380),lmp(depth380),lmp(btemp380),lmp(bsalin380), lmp(dist402),lmp(depth402),lmp(btemp402),lmp(bsalin402), 
            lmp(dist432),lmp(depth432),lmp(btemp432),lmp(bsalin432), lmp(dist466),lmp(depth466),lmp(btemp466),lmp(bsalin466), lmp(dist483),lmp(depth483),lmp(btemp483),lmp(bsalin483), 
@@ -1030,7 +1038,7 @@ pvalues <- c(lmp(dist43),  lmp(depth43),   lmp(btemp43),  lmp(bsalin43), lmp(dis
            lmp(dist997),  lmp(depth997),   lmp(btemp997),  lmp(bsalin997),  lmp(dist1090),   lmp(depth1090),  lmp(btemp1090),  lmp(bsalin1090))
 
 rda.can.loci <- data.frame(names_lms,pvalues)
-rda.can.loci2 <- rda.can.loci[which(rda.can.loci[,2] < 0.001),]
+rda.can.loci2 <- rda.can.loci[which(rda.can.loci[,2] < 0.001),] # dim is 5 x 2
 
 
 # Plotting the RDA plot with the three loci indicated by redundancy analysis to have strong locus-environmental associations
@@ -1243,6 +1251,252 @@ can_loci <- spp.scr[c(35, 125, 214, 396, 442, 499, 524, 542, 609, 615, 626, 703,
 
 dev.off()
 
-# What if I did RDA using only 22 loci that BayEnv indicated as important? Would b_temp come through as more important environmental variable? And 16 loci fall on that axis?
+#####################################################################################################
+# Plots of allele frequency vs environment are really hard to visualize --> aggregate by environment
+# locus 125 and depth
+d<- cbind(adults.nonas.232.1137[,125], envi.ordered.matrix[,"depth"])
+d2 <- aggregate(d[, 1], list(d[,2]), mean)
+length(unique(d[,2]))
+plot(d2$x ~ d2$Group.1, xlab = 'Standardized depth', ylab = 'Aggregated allele freq', ylim = c(-0.8,0.2))
+d.lm <- lm(d2$x ~ d2$Group.1)
+abline(d.lm, col = 'red')
 
+plot(adults.nonas.232.1137[,125] ~ envi.ordered.matrix[,"depth"]) # in comparision
+abline(lm(adults.nonas.232.1137[,125] ~ envi.ordered.matrix[,"depth"]), col = 'red')
+
+
+# locus 125 and salinity
+d<- cbind(adults.nonas.232.1137[,125], envi.ordered.matrix[,"b_salin"])
+d2 <- aggregate(d[, 1], list(d[,2]), mean)
+length(unique(d[,2]))
+plot(d2$x ~ d2$Group.1, xlab = 'Standardized b_salin', ylab = 'Aggregated allele freq', ylim = c(-0.8,0.2))
+d.lm <- lm(d2$x ~ d2$Group.1)
+abline(d.lm, col = 'red')
+
+plot(adults.nonas.232.1137[,125] ~ envi.ordered.matrix[,"b_salin"]) # in comparision
+abline(lm(adults.nonas.232.1137[,125] ~ envi.ordered.matrix[,"b_salin"]), col = 'red')
+
+# locus 291 and depth
+d<- cbind(adults.nonas.232.1137[,291], envi.ordered.matrix[,"depth"])
+d2 <- aggregate(d[, 1], list(d[,2]), mean)
+length(unique(d[,2]))
+plot(d2$x ~ d2$Group.1, xlab = 'Standardized depth', ylab = 'Aggregated allele freq')
+d.lm <- lm(d2$x ~ d2$Group.1)
+abline(d.lm, col = 'red')
+
+plot(adults.nonas.232.1137[,291] ~ envi.ordered.matrix[,"depth"]) # in comparision
+abline(lm(adults.nonas.232.1137[,291] ~ envi.ordered.matrix[,"depth"]), col = 'red')
+
+# locus 291 and temperature
+d<- cbind(adults.nonas.232.1137[,291], envi.ordered.matrix[,"b_temp"])
+d2 <- aggregate(d[, 1], list(d[,2]), mean)
+length(unique(d[,2]))
+plot(d2$x ~ d2$Group.1, xlab = 'Standardized b_temp', ylab = 'Aggregated allele freq')
+d.lm <- lm(d2$x ~ d2$Group.1)
+abline(d.lm, col = 'red')
+
+plot(adults.nonas.232.1137[,291] ~ envi.ordered.matrix[,"b_temp"]) # in comparision
+abline(lm(adults.nonas.232.1137[,291] ~ envi.ordered.matrix[,"b_temp"]), col = 'red')
+
+# locus 499 and distance
+d<- cbind(adults.nonas.232.1137[,499], envi.ordered.matrix[,"dist"])
+d2 <- aggregate(d[, 1], list(d[,2]), mean)
+length(unique(d[,2]))
+plot(d2$x ~ d2$Group.1, xlab = 'Standardized distance', ylab = 'Aggregated allele freq')
+d.lm <- lm(d2$x ~ d2$Group.1)
+abline(d.lm, col = 'red')
+
+plot(adults.nonas.232.1137[,499] ~ envi.ordered.matrix[,"dist"]) # in comparision
+abline(lm(adults.nonas.232.1137[,499] ~ envi.ordered.matrix[,"dist"]), col = 'red')
+
+# locus 499 and depth
+d<- cbind(adults.nonas.232.1137[,499], envi.ordered.matrix[,"depth"])
+d2 <- aggregate(d[, 1], list(d[,2]), mean)
+length(unique(d[,2]))
+plot(d2$x ~ d2$Group.1, xlab = 'Standardized depth', ylab = 'Aggregated allele freq')
+d.lm <- lm(d2$x ~ d2$Group.1)
+abline(d.lm, col = 'red')
+
+plot(adults.nonas.232.1137[,499] ~ envi.ordered.matrix[,"depth"]) # in comparision
+abline(lm(adults.nonas.232.1137[,499] ~ envi.ordered.matrix[,"depth"]), col = 'red')
+
+# locus 743 and salinity
+d<- cbind(adults.nonas.232.1137[,743], envi.ordered.matrix[,"b_salin"])
+d2 <- aggregate(d[, 1], list(d[,2]), mean)
+length(unique(d[,2]))
+plot(d2$x ~ d2$Group.1, xlab = 'Standardized salinity', ylab = 'Aggregated allele freq')
+d.lm <- lm(d2$x ~ d2$Group.1)
+abline(d.lm, col = 'red')
+
+plot(adults.nonas.232.1137[,743] ~ envi.ordered.matrix[,"b_salin"]) # in comparision
+abline(lm(adults.nonas.232.1137[,743] ~ envi.ordered.matrix[,"b_salin"]), col = 'red')
+
+
+##################################################################################################
+#### Part of RDA is multivarite linear regression. How to bypass this? Rank regression or GAM ####
+##################################################################################################
+# gam and mcgv packages do not play well
+library(gam)
+
+setwd("/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/GAM")
+allele.table <- read.table("232fish1137alleles_notcentered.txt", header = TRUE) # allele frequencies
+# allele.table <- read.table("232fish1137alleles.txt", header = TRUE)
+setwd("/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation")
+envi <- read.table("232envirowithdist.txt", header = TRUE)
+
+# Using gam::gam
+par(mfrow = c(2,2))
+gam1 <- gam(allele.table[,125] ~ s(dist, df = 4) + s(depth, df = 4) + s(b_temp, df = 4) + s(b_salin, df = 4), data = envi)
+plot(gam1, se = TRUE)
+summary(gam1)
+
+gam2 <- gam(allele.table[,291] ~ s(dist, df = 4) + s(depth, df = 4) + s(b_temp, df = 4) + s(b_salin, df = 4), data = envi)
+plot(gam2, se = TRUE)
+summary(gam2)
+
+gam3 <- gam(allele.table[,499] ~ s(dist, df = 4) + s(depth, df = 4) + s(b_temp, df = 4) + s(b_salin, df = 4), data = envi)
+plot(gam3, se = TRUE)
+summary(gam3)
+
+gam4 <- gam(allele.table[,743] ~ s(dist, df = 4) + s(depth, df = 4) + s(b_temp, df = 4) + s(b_salin, df = 4), data = envi)
+plot(gam4, se = TRUE)
+summary(gam4)
+
+# Automatic smoothness selection
+library(mgcv)
+mod1 <- mgcv::gam(allele.table[,125] ~ s(dist) + s(depth) + s(b_temp) + s(b_salin), data = envi, method = 'REML', family = quasibinomial) #b_salin
+plot(mod1, pages = 1, scheme = 1, all.terms = TRUE, seWithMean = TRUE)
+summary(mod1)
+
+mod2 <- mgcv::gam(allele.table[,291] ~ s(dist) + s(depth) + s(b_temp) + s(b_salin), data = envi, method = 'REML') #depth, b_temp
+plot(mod2, pages = 1, scheme = 1, all.terms = TRUE, seWithMean = TRUE)
+summary(mod2)
+
+mod3 <- mgcv::gam(allele.table[,499] ~ s(dist) + s(depth) + s(b_temp) + s(b_salin), data = envi, method = 'REML') #dist
+plot(mod3, pages = 1, scheme = 1, all.terms = TRUE, seWithMean = TRUE)
+summary(mod3)
+
+mod4 <- mgcv::gam(allele.table[,743] ~ s(dist) + s(depth) + s(b_temp) + s(b_salin), data = envi, method = 'REML') #b_salin
+plot(mod4, pages = 1, scheme = 1, all.terms = TRUE, seWithMean = TRUE)
+summary(mod4)
+
+
+###############################################################################################################################################
+#### Single linear regressions are above. Now I need to fit a GAM for each candidate locus-environmental variable. Then calculate p-value. ####
+###############################################################################################################################################
+envi.ordered <- envi[with(envi, order(PinskyID)),]
+as.character(envi.ordered[,2]) == rownames(adults.nonas.232.1137)
+rownames(envi.ordered) <- envi.ordered[,"PinskyID"] # so that environmental variable units in GAM plots won't be standardized
+
+library(mgcv)
+
+names_gams <- vector()
+for(i in rda.cans){
+  names_gams <- append(names_gams, paste0('dist',i,'gam'))
+  names_gams <- append(names_gams, paste0('depth',i,'gam'))
+  names_gams <- append(names_gams, paste0('btemp',i,'gam'))
+  names_gams <- append(names_gams, paste0('bsalin',i,'gam'))
+}
+
+# For loop to fit GAM between all RDA candidates and each 4 enviromental variables
+for(i in rda.cans){
+  assign(paste0('dist',i,'gam'), mgcv::gam(adults.nonas.232.1137[,i] ~ s(dist), data = envi.ordered, method = 'REML', select = TRUE))
+  assign(paste0('depth',i,'gam'), mgcv::gam(adults.nonas.232.1137[,i] ~ s(depth), data = envi.ordered, method = 'REML', select = TRUE))
+  assign(paste0('btemp',i,'gam'), mgcv::gam(adults.nonas.232.1137[,i] ~ s(b_temp), data = envi.ordered, method = 'REML', select = TRUE))
+  assign(paste0('bsalin',i,'gam'), mgcv::gam(adults.nonas.232.1137[,i] ~ s(b_salin), data = envi.ordered, method = 'REML', select = TRUE))
+}
+
+# Function to calculate p-values
+gamp <- function (modelobject) {
+  if (class(modelobject)[1] != "gam") stop("Not an object of class 'gam' ")
+  f <- summary(modelobject)$s.pv
+  # p <- pf(f[1],f[2],f[3],lower.tail=F)
+  # attributes(p) <- NULL
+  return(f)
+}
+
+gampvalues <- c(gamp(dist43gam),  gamp(depth43gam),   gamp(btemp43gam),  gamp(bsalin43gam), gamp(dist47gam),    gamp(depth47gam),   gamp(btemp47gam),  gamp(bsalin47gam),   gamp(dist125gam),  gamp(depth125gam),   gamp(btemp125gam),  gamp(bsalin125gam),  gamp(dist291gam)  ,  gamp(depth291gam), 
+             gamp(btemp291gam),   gamp(bsalin291gam),  gamp(dist380gam),  gamp(depth380gam), gamp(btemp380gam),   gamp(bsalin380gam),  gamp(dist402gam),  gamp(depth402gam),   gamp(btemp402gam),  gamp(bsalin402gam),  gamp(dist432gam),   gamp(depth432gam),   gamp(btemp432gam),   gamp(bsalin432gam), 
+             gamp(dist466gam),  gamp(depth466gam),   gamp(btemp466gam),  gamp(bsalin466gam),  gamp(dist483gam),    gamp(depth483gam),   gamp(btemp483gam),  gamp(bsalin483gam),  gamp(dist499gam),  gamp(depth499gam),   gamp(btemp499gam),  gamp(bsalin499gam),  gamp(dist577gam)  ,  gamp(depth577gam), 
+             gamp(btemp577gam),   gamp(bsalin577gam),  gamp(dist579gam),   gamp(depth579gam), gamp(btemp579gam),   gamp(bsalin579gam),  gamp(dist635gam),  gamp(depth635gam),   gamp(btemp635gam),  gamp(bsalin635gam),  gamp(dist695gam),   gamp(depth695gam),   gamp(btemp695gam),   gamp(bsalin695gam), 
+             gamp(dist704gam),  gamp(depth704gam),   gamp(btemp704gam),  gamp(bsalin704gam),  gamp(dist743gam),    gamp(depth743gam),   gamp(btemp743gam),  gamp(bsalin743gam),  gamp(dist826gam),  gamp(depth826gam),   gamp(btemp826gam),  gamp(bsalin826gam),  gamp(dist842gam) ,  gamp(depth842gam), 
+             gamp(btemp842gam),   gamp(bsalin842gam),  gamp(dist937gam),   gamp(depth937gam), gamp(btemp937gam),   gamp(bsalin937gam),  gamp(dist947gam),  gamp(depth947gam),   gamp(btemp947gam),  gamp(bsalin947gam),  gamp(dist965gam),   gamp(depth965gam),   gamp(btemp965gam),   gamp(bsalin965gam), 
+             gamp(dist997gam),  gamp(depth997gam),   gamp(btemp997gam),  gamp(bsalin997gam),  gamp(dist1090gam),   gamp(depth1090gam),  gamp(btemp1090gam),  gamp(bsalin1090gam))
+
+rda.can.loci.gam <- data.frame(names_gams,gampvalues)
+rda.can.loci2.gam <- rda.can.loci.gam[which(rda.can.loci.gam[,2] < 0.001),]
+
+#### Nice plot of the significant locus-environmental associations based on GAMs ####
+png(file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/GAM/GAM_plots.png", width=8, height=9, res=300, units="in")
+
+par(
+  mfrow = c(3, 3), 
+  mar=c(3, 3, 2, 1), # panel magin size in "line number" units
+  mgp=c(2, 1, 0), # default is c(3,1,0); line number for axis label, tick label, axis
+  tcl=-0.5, # size of tick marks as distance INTO figure (negative means pointing outward)
+  cex=1, # character expansion factor; keep as 1; if you have a many-panel figure, they start changing the default!
+  ps=12, # point size, which is the font size
+  bg=NA
+)
+
+plot(depth125gam, scheme = 1, seWithMean = TRUE, xlab = 'Depth')
+mtext('Contig 8420', side = 3, line = 0.5, adj = 0)
+plot(bsalin125gam, scheme = 1, seWithMean = TRUE, xlab = 'Bottom salinity')
+mtext('Contig 8420', side = 3, line = 0.5, adj = 0)
+plot(depth291gam, scheme = 1, seWithMean = TRUE, xlab = 'Depth')
+mtext('Contig 19728', side = 3, line = 0.5, adj = 0)
+plot(btemp291gam, scheme = 1, seWithMean = TRUE, xlab = 'Bottom temperature')
+mtext('Contig 19728', side = 3, line = 0.5, adj = 0)
+plot(dist499gam, scheme = 1, seWithMean = TRUE, xlab = 'Distance')
+mtext('Contig 35399', side = 3, line = 0.5, adj = 0)
+plot(depth499gam, scheme = 1, seWithMean = TRUE, xlab = 'Depth')
+mtext('Contig 35399', side = 3, line = 0.5, adj = 0)
+plot(bsalin743gam, scheme = 1, seWithMean = TRUE, xlab = 'Bottom salinity')
+mtext('Contig 54288', side = 3, line = 0.5, adj = 0)
+
+dev.off()
+
+anova(dist43, test="Chisq")
+
+
+dist43 <- mgcv::gam(adults.nonas.232.1137[,43] ~ s(dist), data = envi.ordered.matrix, method = 'REML', select = TRUE)
+depth43 <- mgcv::gam(adults.nonas.232.1137[,43] ~ s(depth), data = envi.ordered.matrix, method = 'REML', select = TRUE)
+btemp43 <- mgcv::gam(adults.nonas.232.1137[,43] ~ s(b_temp), data = envi.ordered.matrix, method = 'REML', select = TRUE)
+bsalin43 <- mgcv::gam(adults.nonas.232.1137[,43] ~ s(b_salin), data = envi.ordered.matrix, method = 'REML', select = TRUE)
+
+plot(dist43, pages = 1, scheme = 1, all.terms = TRUE, seWithMean = TRUE)
+
+test125 <- lm(adults.nonas.232.1137[,125] ~ envi.ordered.matrix[,"b_salin"]+envi.ordered.matrix[,"b_temp"]+envi.ordered.matrix[,"depth"]+envi.ordered.matrix[,"dist"])
+test125.1 <- lm(adults.nonas.232.1137[,125] ~ envi.ordered.matrix[,"b_salin"]+envi.ordered.matrix[,"b_temp"]+envi.ordered.matrix[,"dist"])
+test125.2 <- lm(adults.nonas.232.1137[,125] ~ envi.ordered.matrix[,"b_salin"])
+mod1 <- mgcv::gam(adults.nonas.232.1137[,125] ~ s(dist) + s(depth) + s(b_temp) + s(b_salin), data = envi.ordered.matrix, method = 'REML', select = TRUE)
+mod1.1 <- mgcv::gam(adults.nonas.232.1137[,125] ~ s(depth) + s(b_salin), data = envi.ordered.matrix, method = 'REML')
+mod1.2 <- mgcv::gam(adults.nonas.232.1137[,125] ~ s(b_salin), data = envi.ordered.matrix, method = 'REML')
+AIC(test125) #36.47104
+AIC(mod1) #29.30607
+AIC(test125.1) #34.92524
+AIC(mod1.1)
+AIC(test125.2) #35.74117
+AIC(mod1.2) # 34.87272
+
+test291 <- lm(adults.nonas.232.1137[,291] ~ envi.ordered.matrix[,"b_salin"]+envi.ordered.matrix[,"b_temp"]+envi.ordered.matrix[,"depth"]+envi.ordered.matrix[,"dist"])
+test291.1 <- lm(adults.nonas.232.1137[,291] ~ envi.ordered.matrix[,"b_temp"]+envi.ordered.matrix[,"depth"]+envi.ordered.matrix[,"dist"])
+mod2 <- mgcv::gam(adults.nonas.232.1137[,291] ~ s(dist) + s(depth) + s(b_temp) + s(b_salin), data = envi.ordered.matrix, method = 'REML')
+AIC(test291) #125.0026
+AIC(test291.1) #124.7255
+AIC(mod2) #125.0028
+
+test499 <- lm(adults.nonas.232.1137[,499] ~ envi.ordered.matrix[,"b_salin"]+envi.ordered.matrix[,"b_temp"]+envi.ordered.matrix[,"depth"]+envi.ordered.matrix[,"dist"])
+test499.1 <- lm(adults.nonas.232.1137[,499] ~ envi.ordered.matrix[,"depth"]+envi.ordered.matrix[,"dist"])
+mod3 <- mgcv::gam(adults.nonas.232.1137[,499] ~ s(dist) + s(depth) + s(b_temp) + s(b_salin), data = envi.ordered.matrix, method = 'REML')
+AIC(test499) #-170.446
+AIC(test499.1) #-172.5401
+AIC(mod3) #-169.8731
+
+test743 <- lm(adults.nonas.232.1137[,743] ~ envi.ordered.matrix[,"b_salin"]+envi.ordered.matrix[,"b_temp"]+envi.ordered.matrix[,"depth"]+envi.ordered.matrix[,"dist"])
+test743.1 <- lm(adults.nonas.232.1137[,743] ~ envi.ordered.matrix[,"b_salin"])
+mod4 <- mgcv::gam(adults.nonas.232.1137[,743] ~ s(dist) + s(depth) + s(b_temp) + s(b_salin), data = envi.ordered.matrix, method = 'REML')
+AIC(test743) #-8.783139
+AIC(test743.1) #-10.24018
+AIC(mod4) #-8.424157
 
