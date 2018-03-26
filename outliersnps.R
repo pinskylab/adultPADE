@@ -689,135 +689,135 @@ plot(adults.rda, xlim = c(-0.1,0.1), ylim = c(-0.1,0.1))
 anova(adults.rda)
 anova(adults.rda, by="axis", step=1000)
 
-# To get values proportional to eigenvalues
-ev <- sfs_pca$sdev^2
-ev.varprop <- ev/sum(ev)
-ev.varprop[1:25]
-
-plot(adults.rda, choices = c(1,2), scaling=2)
-plot(adults.rda, choices = c(1,3), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
-plot(adults.rda, choices = c(1,2), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
-plot(adults.rda, choices = c(2,3), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
-plot(adults.rda, choices = c(1,4), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
-plot(adults.rda, choices = c(2,4), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
-plot(adults.rda, choices = c(3,4), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
-
-spp.scr <- scores(adults.rda, display = "species", scaling = 2, choices = c(1,2,3,4))
-arrows(0,0, spp.scr[,1], spp.scr[,2], length = 0, lty=1, col = "blue")
-
-rainbow(22)
-points(spp.scr[35,1], spp.scr[35,3], col="#FF0000FF", pch = 16)
-points(spp.scr[125,1], spp.scr[125,3], col="#FF4600FF", pch = 16)
-points(spp.scr[214,1], spp.scr[214,3], col="#FF8B00FF", pch = 16)
-points(spp.scr[396,1], spp.scr[396,3], col="#FFD100FF", pch = 16)
-points(spp.scr[442,1], spp.scr[442,3], col="#E8FF00FF", pch = 16)
-points(spp.scr[499,1], spp.scr[499,3], col="#A2FF00FF", pch = 16)
-points(spp.scr[524,1], spp.scr[524,3], col="#5DFF00FF", pch = 16)
-points(spp.scr[542,1], spp.scr[542,3], col="#17FF00FF", pch = 16)
-points(spp.scr[609,1], spp.scr[609,3], col="#00FF2EFF", pch = 16)
-points(spp.scr[615,1], spp.scr[615,3], col="#00FF74FF", pch = 16)
-points(spp.scr[626,1], spp.scr[626,3], col="#00FFB9FF", pch = 16)
-points(spp.scr[703,1], spp.scr[703,3], col="#00FFFFFF", pch = 16)
-points(spp.scr[743,1], spp.scr[743,3], col="#00B9FFFF", pch = 16)
-points(spp.scr[808,1], spp.scr[808,3], col="#0074FFFF", pch = 16)
-points(spp.scr[825,1], spp.scr[825,3], col="#002EFFFF", pch = 16)
-points(spp.scr[826,1], spp.scr[826,3], col="#1700FFFF", pch = 16)
-points(spp.scr[829,1], spp.scr[829,3], col="#5D00FFFF", pch = 16)
-points(spp.scr[916,1], spp.scr[916,3], col="#A200FFFF", pch = 16)
-points(spp.scr[919,1], spp.scr[919,3], col="#E800FFFF", pch = 16)
-points(spp.scr[923,1], spp.scr[923,3], col="#FF00D1FF", pch = 16)
-points(spp.scr[990,1], spp.scr[990,3], col="#FF008BFF", pch = 16)
-points(spp.scr[1050,1], spp.scr[1050,3], col="#FF0046FF", pch = 16)
-
-spp.scr <- scores(adults.rda, display = "species", scaling = 3, choices = c(1,2,3,4))
-points(spp.scr[35,1], spp.scr[35,2], col="#FF0000FF", pch = 16)
-points(spp.scr[125,1], spp.scr[125,2], col="#FF4600FF", pch = 16)
-points(spp.scr[214,1], spp.scr[214,2], col="#FF8B00FF", pch = 16)
-points(spp.scr[396,1], spp.scr[396,2], col="#FFD100FF", pch = 16)
-points(spp.scr[442,1], spp.scr[442,2], col="#E8FF00FF", pch = 16)
-points(spp.scr[499,1], spp.scr[499,2], col="#A2FF00FF", pch = 16)
-points(spp.scr[524,1], spp.scr[524,2], col="#5DFF00FF", pch = 16)
-points(spp.scr[542,1], spp.scr[542,2], col="#17FF00FF", pch = 16)
-points(spp.scr[609,1], spp.scr[609,2], col="#00FF2EFF", pch = 16)
-points(spp.scr[615,1], spp.scr[615,2], col="#00FF74FF", pch = 16)
-points(spp.scr[626,1], spp.scr[626,2], col="#00FFB9FF", pch = 16)
-points(spp.scr[703,1], spp.scr[703,2], col="#00FFFFFF", pch = 16)
-points(spp.scr[743,1], spp.scr[743,2], col="#00B9FFFF", pch = 16)
-points(spp.scr[808,1], spp.scr[808,2], col="#0074FFFF", pch = 16)
-points(spp.scr[825,1], spp.scr[825,2], col="#002EFFFF", pch = 16)
-points(spp.scr[826,1], spp.scr[826,2], col="#1700FFFF", pch = 16)
-points(spp.scr[829,1], spp.scr[829,2], col="#5D00FFFF", pch = 16)
-points(spp.scr[916,1], spp.scr[916,2], col="#A200FFFF", pch = 16)
-points(spp.scr[919,1], spp.scr[919,2], col="#E800FFFF", pch = 16)
-points(spp.scr[923,1], spp.scr[923,2], col="#FF00D1FF", pch = 16)
-points(spp.scr[990,1], spp.scr[990,2], col="#FF008BFF", pch = 16)
-points(spp.scr[1050,1], spp.scr[1050,2], col="#FF0046FF", pch = 16)
-
-plot(adults.rda, choices = c(1,2), scaling=3)
-spp.scr <- scores(adults.rda, display = "species", scaling = 3, choices = c(1,2,3,4,5))
-can_loci <- spp.scr[c(35, 125, 214, 396, 442, 499, 524, 542, 609, 615, 626, 703, 743, 808, 825, 826, 829, 916, 919, 923, 990, 1050),]
-for (snp in can_loci){
-  points(can_loci, col = "darkblue", pch = 16, cex = 0.8)
-  arrows(0,0, can_loci[,1], can_loci[,2], length = 0, lty=1, col = "darkblue", cex = 0.8)
-}
-
-points(spp.scr[35,1], spp.scr[35,2], col="darkblue", pch = 16)
-points(spp.scr[125,1], spp.scr[125,2], col="darkblue", pch = 16)
-points(spp.scr[214,1], spp.scr[214,2], col="darkblue", pch = 16)
-points(spp.scr[396,1], spp.scr[396,2], col="darkblue", pch = 16)
-points(spp.scr[442,1], spp.scr[442,2], col="darkblue", pch = 16)
-points(spp.scr[499,1], spp.scr[499,2], col="darkblue", pch = 16)
-points(spp.scr[524,1], spp.scr[524,2], col="darkblue", pch = 16)
-points(spp.scr[542,1], spp.scr[542,2], col="darkblue", pch = 16)
-points(spp.scr[609,1], spp.scr[609,2], col="darkblue", pch = 16)
-points(spp.scr[615,1], spp.scr[615,2], col="darkblue", pch = 16)
-points(spp.scr[626,1], spp.scr[626,2], col="darkblue", pch = 16)
-points(spp.scr[703,1], spp.scr[703,2], col="darkblue", pch = 16)
-points(spp.scr[743,1], spp.scr[743,2], col="darkblue", pch = 16)
-points(spp.scr[808,1], spp.scr[808,2], col="darkblue", pch = 16)
-points(spp.scr[825,1], spp.scr[825,2], col="darkblue", pch = 16)
-points(spp.scr[826,1], spp.scr[826,2], col="darkblue", pch = 16)
-points(spp.scr[829,1], spp.scr[829,2], col="darkblue", pch = 16)
-points(spp.scr[916,1], spp.scr[916,2], col="darkblue", pch = 16)
-points(spp.scr[919,1], spp.scr[919,2], col="darkblue", pch = 16)
-points(spp.scr[923,1], spp.scr[923,2], col="darkblue", pch = 16)
-points(spp.scr[990,1], spp.scr[990,2], col="darkblue", pch = 16)
-points(spp.scr[1050,1], spp.scr[1050,2], col="darkblue", pch = 16)
-
-plot(adults.rda, choices = c(1,3), scaling=3)
-spp.scr <- scores(adults.rda, display = "species", scaling = 3, choices = c(1,2,3,4,5))
-can_loci <- spp.scr[c(35, 125, 214, 396, 442, 499, 524, 542, 609, 615, 626, 703, 743, 808, 825, 826, 829, 916, 919, 923, 990, 1050), c(1,3)]
-for (snp in can_loci){
-  points(can_loci, col = "darkblue", pch = 16)
-  arrows(0,0, can_loci[,1], can_loci[,2], length = 0, lty=1, col = "darkblue", cex = 0.8)
-}
-
-points(spp.scr[35,1], spp.scr[35,3], col="darkblue", pch = 16)
-points(spp.scr[125,1], spp.scr[125,3], col="darkblue", pch = 16)
-points(spp.scr[214,1], spp.scr[214,3], col="darkblue", pch = 16)
-points(spp.scr[396,1], spp.scr[396,3], col="darkblue", pch = 16)
-points(spp.scr[442,1], spp.scr[442,3], col="darkblue", pch = 16)
-points(spp.scr[499,1], spp.scr[499,3], col="darkblue", pch = 16)
-points(spp.scr[524,1], spp.scr[524,3], col="darkblue", pch = 16)
-points(spp.scr[542,1], spp.scr[542,3], col="darkblue", pch = 16)
-points(spp.scr[609,1], spp.scr[609,3], col="darkblue", pch = 16)
-points(spp.scr[615,1], spp.scr[615,3], col="darkblue", pch = 16)
-points(spp.scr[626,1], spp.scr[626,3], col="darkblue", pch = 16)
-points(spp.scr[703,1], spp.scr[703,3], col="darkblue", pch = 16)
-points(spp.scr[743,1], spp.scr[743,3], col="darkblue", pch = 16)
-points(spp.scr[808,1], spp.scr[808,3], col="darkblue", pch = 16)
-points(spp.scr[825,1], spp.scr[825,3], col="darkblue", pch = 16)
-points(spp.scr[826,1], spp.scr[826,3], col="darkblue", pch = 16)
-points(spp.scr[829,1], spp.scr[829,3], col="darkblue", pch = 16)
-points(spp.scr[916,1], spp.scr[916,3], col="darkblue", pch = 16)
-points(spp.scr[919,1], spp.scr[919,3], col="darkblue", pch = 16)
-points(spp.scr[923,1], spp.scr[923,3], col="darkblue", pch = 16)
-points(spp.scr[990,1], spp.scr[990,3], col="darkblue", pch = 16)
-points(spp.scr[1050,1], spp.scr[1050,3], col="darkblue", pch = 16)
-
-# Plotting species and biplot scores
-plot(adults.rda, display=c("sp", "bp"))
-ordispider(adults.rda)
+# # To get values proportional to eigenvalues
+# ev <- sfs_pca$sdev^2
+# ev.varprop <- ev/sum(ev)
+# ev.varprop[1:25]
+# 
+# plot(adults.rda, choices = c(1,2), scaling=2)
+# plot(adults.rda, choices = c(1,3), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
+# plot(adults.rda, choices = c(1,2), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
+# plot(adults.rda, choices = c(2,3), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
+# plot(adults.rda, choices = c(1,4), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
+# plot(adults.rda, choices = c(2,4), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
+# plot(adults.rda, choices = c(3,4), xlim = c(-0.85,0.8), ylim = c(-0.8,0.7), scaling=3)
+# 
+# spp.scr <- scores(adults.rda, display = "species", scaling = 2, choices = c(1,2,3,4))
+# arrows(0,0, spp.scr[,1], spp.scr[,2], length = 0, lty=1, col = "blue")
+# 
+# rainbow(22)
+# points(spp.scr[35,1], spp.scr[35,3], col="#FF0000FF", pch = 16)
+# points(spp.scr[125,1], spp.scr[125,3], col="#FF4600FF", pch = 16)
+# points(spp.scr[214,1], spp.scr[214,3], col="#FF8B00FF", pch = 16)
+# points(spp.scr[396,1], spp.scr[396,3], col="#FFD100FF", pch = 16)
+# points(spp.scr[442,1], spp.scr[442,3], col="#E8FF00FF", pch = 16)
+# points(spp.scr[499,1], spp.scr[499,3], col="#A2FF00FF", pch = 16)
+# points(spp.scr[524,1], spp.scr[524,3], col="#5DFF00FF", pch = 16)
+# points(spp.scr[542,1], spp.scr[542,3], col="#17FF00FF", pch = 16)
+# points(spp.scr[609,1], spp.scr[609,3], col="#00FF2EFF", pch = 16)
+# points(spp.scr[615,1], spp.scr[615,3], col="#00FF74FF", pch = 16)
+# points(spp.scr[626,1], spp.scr[626,3], col="#00FFB9FF", pch = 16)
+# points(spp.scr[703,1], spp.scr[703,3], col="#00FFFFFF", pch = 16)
+# points(spp.scr[743,1], spp.scr[743,3], col="#00B9FFFF", pch = 16)
+# points(spp.scr[808,1], spp.scr[808,3], col="#0074FFFF", pch = 16)
+# points(spp.scr[825,1], spp.scr[825,3], col="#002EFFFF", pch = 16)
+# points(spp.scr[826,1], spp.scr[826,3], col="#1700FFFF", pch = 16)
+# points(spp.scr[829,1], spp.scr[829,3], col="#5D00FFFF", pch = 16)
+# points(spp.scr[916,1], spp.scr[916,3], col="#A200FFFF", pch = 16)
+# points(spp.scr[919,1], spp.scr[919,3], col="#E800FFFF", pch = 16)
+# points(spp.scr[923,1], spp.scr[923,3], col="#FF00D1FF", pch = 16)
+# points(spp.scr[990,1], spp.scr[990,3], col="#FF008BFF", pch = 16)
+# points(spp.scr[1050,1], spp.scr[1050,3], col="#FF0046FF", pch = 16)
+# 
+# spp.scr <- scores(adults.rda, display = "species", scaling = 3, choices = c(1,2,3,4))
+# points(spp.scr[35,1], spp.scr[35,2], col="#FF0000FF", pch = 16)
+# points(spp.scr[125,1], spp.scr[125,2], col="#FF4600FF", pch = 16)
+# points(spp.scr[214,1], spp.scr[214,2], col="#FF8B00FF", pch = 16)
+# points(spp.scr[396,1], spp.scr[396,2], col="#FFD100FF", pch = 16)
+# points(spp.scr[442,1], spp.scr[442,2], col="#E8FF00FF", pch = 16)
+# points(spp.scr[499,1], spp.scr[499,2], col="#A2FF00FF", pch = 16)
+# points(spp.scr[524,1], spp.scr[524,2], col="#5DFF00FF", pch = 16)
+# points(spp.scr[542,1], spp.scr[542,2], col="#17FF00FF", pch = 16)
+# points(spp.scr[609,1], spp.scr[609,2], col="#00FF2EFF", pch = 16)
+# points(spp.scr[615,1], spp.scr[615,2], col="#00FF74FF", pch = 16)
+# points(spp.scr[626,1], spp.scr[626,2], col="#00FFB9FF", pch = 16)
+# points(spp.scr[703,1], spp.scr[703,2], col="#00FFFFFF", pch = 16)
+# points(spp.scr[743,1], spp.scr[743,2], col="#00B9FFFF", pch = 16)
+# points(spp.scr[808,1], spp.scr[808,2], col="#0074FFFF", pch = 16)
+# points(spp.scr[825,1], spp.scr[825,2], col="#002EFFFF", pch = 16)
+# points(spp.scr[826,1], spp.scr[826,2], col="#1700FFFF", pch = 16)
+# points(spp.scr[829,1], spp.scr[829,2], col="#5D00FFFF", pch = 16)
+# points(spp.scr[916,1], spp.scr[916,2], col="#A200FFFF", pch = 16)
+# points(spp.scr[919,1], spp.scr[919,2], col="#E800FFFF", pch = 16)
+# points(spp.scr[923,1], spp.scr[923,2], col="#FF00D1FF", pch = 16)
+# points(spp.scr[990,1], spp.scr[990,2], col="#FF008BFF", pch = 16)
+# points(spp.scr[1050,1], spp.scr[1050,2], col="#FF0046FF", pch = 16)
+# 
+# plot(adults.rda, choices = c(1,2), scaling=3)
+# spp.scr <- scores(adults.rda, display = "species", scaling = 3, choices = c(1,2,3,4,5))
+# can_loci <- spp.scr[c(35, 125, 214, 396, 442, 499, 524, 542, 609, 615, 626, 703, 743, 808, 825, 826, 829, 916, 919, 923, 990, 1050),]
+# for (snp in can_loci){
+#   points(can_loci, col = "darkblue", pch = 16, cex = 0.8)
+#   arrows(0,0, can_loci[,1], can_loci[,2], length = 0, lty=1, col = "darkblue", cex = 0.8)
+# }
+# 
+# points(spp.scr[35,1], spp.scr[35,2], col="darkblue", pch = 16)
+# points(spp.scr[125,1], spp.scr[125,2], col="darkblue", pch = 16)
+# points(spp.scr[214,1], spp.scr[214,2], col="darkblue", pch = 16)
+# points(spp.scr[396,1], spp.scr[396,2], col="darkblue", pch = 16)
+# points(spp.scr[442,1], spp.scr[442,2], col="darkblue", pch = 16)
+# points(spp.scr[499,1], spp.scr[499,2], col="darkblue", pch = 16)
+# points(spp.scr[524,1], spp.scr[524,2], col="darkblue", pch = 16)
+# points(spp.scr[542,1], spp.scr[542,2], col="darkblue", pch = 16)
+# points(spp.scr[609,1], spp.scr[609,2], col="darkblue", pch = 16)
+# points(spp.scr[615,1], spp.scr[615,2], col="darkblue", pch = 16)
+# points(spp.scr[626,1], spp.scr[626,2], col="darkblue", pch = 16)
+# points(spp.scr[703,1], spp.scr[703,2], col="darkblue", pch = 16)
+# points(spp.scr[743,1], spp.scr[743,2], col="darkblue", pch = 16)
+# points(spp.scr[808,1], spp.scr[808,2], col="darkblue", pch = 16)
+# points(spp.scr[825,1], spp.scr[825,2], col="darkblue", pch = 16)
+# points(spp.scr[826,1], spp.scr[826,2], col="darkblue", pch = 16)
+# points(spp.scr[829,1], spp.scr[829,2], col="darkblue", pch = 16)
+# points(spp.scr[916,1], spp.scr[916,2], col="darkblue", pch = 16)
+# points(spp.scr[919,1], spp.scr[919,2], col="darkblue", pch = 16)
+# points(spp.scr[923,1], spp.scr[923,2], col="darkblue", pch = 16)
+# points(spp.scr[990,1], spp.scr[990,2], col="darkblue", pch = 16)
+# points(spp.scr[1050,1], spp.scr[1050,2], col="darkblue", pch = 16)
+# 
+# plot(adults.rda, choices = c(1,3), scaling=3)
+# spp.scr <- scores(adults.rda, display = "species", scaling = 3, choices = c(1,2,3,4,5))
+# can_loci <- spp.scr[c(35, 125, 214, 396, 442, 499, 524, 542, 609, 615, 626, 703, 743, 808, 825, 826, 829, 916, 919, 923, 990, 1050), c(1,3)]
+# for (snp in can_loci){
+#   points(can_loci, col = "darkblue", pch = 16)
+#   arrows(0,0, can_loci[,1], can_loci[,2], length = 0, lty=1, col = "darkblue", cex = 0.8)
+# }
+# 
+# points(spp.scr[35,1], spp.scr[35,3], col="darkblue", pch = 16)
+# points(spp.scr[125,1], spp.scr[125,3], col="darkblue", pch = 16)
+# points(spp.scr[214,1], spp.scr[214,3], col="darkblue", pch = 16)
+# points(spp.scr[396,1], spp.scr[396,3], col="darkblue", pch = 16)
+# points(spp.scr[442,1], spp.scr[442,3], col="darkblue", pch = 16)
+# points(spp.scr[499,1], spp.scr[499,3], col="darkblue", pch = 16)
+# points(spp.scr[524,1], spp.scr[524,3], col="darkblue", pch = 16)
+# points(spp.scr[542,1], spp.scr[542,3], col="darkblue", pch = 16)
+# points(spp.scr[609,1], spp.scr[609,3], col="darkblue", pch = 16)
+# points(spp.scr[615,1], spp.scr[615,3], col="darkblue", pch = 16)
+# points(spp.scr[626,1], spp.scr[626,3], col="darkblue", pch = 16)
+# points(spp.scr[703,1], spp.scr[703,3], col="darkblue", pch = 16)
+# points(spp.scr[743,1], spp.scr[743,3], col="darkblue", pch = 16)
+# points(spp.scr[808,1], spp.scr[808,3], col="darkblue", pch = 16)
+# points(spp.scr[825,1], spp.scr[825,3], col="darkblue", pch = 16)
+# points(spp.scr[826,1], spp.scr[826,3], col="darkblue", pch = 16)
+# points(spp.scr[829,1], spp.scr[829,3], col="darkblue", pch = 16)
+# points(spp.scr[916,1], spp.scr[916,3], col="darkblue", pch = 16)
+# points(spp.scr[919,1], spp.scr[919,3], col="darkblue", pch = 16)
+# points(spp.scr[923,1], spp.scr[923,3], col="darkblue", pch = 16)
+# points(spp.scr[990,1], spp.scr[990,3], col="darkblue", pch = 16)
+# points(spp.scr[1050,1], spp.scr[1050,3], col="darkblue", pch = 16)
+# 
+# # Plotting species and biplot scores
+# plot(adults.rda, display=c("sp", "bp"))
+# ordispider(adults.rda)
 
 # Let's look at the loadings for each allele
 spp.scr <- scores(adults.rda, display = "species", scaling = 0, choices = c(1,2,3,4))
@@ -1041,7 +1041,7 @@ rda.can.loci <- data.frame(names_lms,pvalues)
 rda.can.loci2 <- rda.can.loci[which(rda.can.loci[,2] < 0.001),] # dim is 5 x 2
 
 
-# Plotting the RDA plot with the three loci indicated by redundancy analysis to have strong locus-environmental associations
+#### Plotting the RDA plot with the four loci indicated by redundancy analysis to have strong locus-environmental associations ####
 png(file="~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Redundancy analysis/RDA plotwith4enviros.png", width=11, height=6, res=300, units="in")
 
 par(
@@ -1068,7 +1068,7 @@ points(spp.scr[291,1], spp.scr[291,2], col = "black", pch = 17, cex = 1.1)
 points(spp.scr[499,1], spp.scr[499,2], col = "black", pch = 18, cex = 1.1)
 points(spp.scr[743,1], spp.scr[743,2], col = "black", pch = 15, cex = 1.1)
 legend("topleft",
-	legend=c("contig 8420", "contig 19728", "contig 35399", "contig 54288"),
+	legend=c("contig 8420", "contig 19728", "contig 35399", "contig 54409"),
 	pch=c(16, 17, 18, 15),
 	col=c("black", "black", "black", "black"))
 legend("bottomleft",
@@ -1086,7 +1086,7 @@ points(spp.scr[291,1], spp.scr[291,3], col = "black", pch = 17, cex = 1.1)
 points(spp.scr[499,1], spp.scr[499,3], col = "black", pch = 18, cex = 1.1)
 points(spp.scr[743,1], spp.scr[743,3], col = "black", pch = 15, cex = 1.1)
 legend("topleft",
-       legend=c("contig 8420", "contig 19728", "contig 35399", "contig 54288"),
+       legend=c("contig 8420", "contig 19728", "contig 35399", "contig 54409"),
        pch=c(16, 17, 18, 15),
        col=c("black", "black", "black", "black"))
 legend("bottomleft",
@@ -1344,6 +1344,7 @@ allele.table <- read.table("232fish1137alleles_notcentered.txt", header = TRUE) 
 setwd("/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation")
 envi <- read.table("232envirowithdist.txt", header = TRUE)
 
+##################################################################################################
 # Using gam::gam
 par(mfrow = c(2,2))
 gam1 <- gam(allele.table[,125] ~ s(dist, df = 4) + s(depth, df = 4) + s(b_temp, df = 4) + s(b_salin, df = 4), data = envi)
@@ -1452,10 +1453,11 @@ mtext('Contig 35399', side = 3, line = 0.5, adj = 0)
 plot(depth499gam, scheme = 1, seWithMean = TRUE, xlab = 'Depth')
 mtext('Contig 35399', side = 3, line = 0.5, adj = 0)
 plot(bsalin743gam, scheme = 1, seWithMean = TRUE, xlab = 'Bottom salinity')
-mtext('Contig 54288', side = 3, line = 0.5, adj = 0)
+mtext('Contig 54409', side = 3, line = 0.5, adj = 0)
 
 dev.off()
 
+#####################################################################################
 anova(dist43, test="Chisq")
 
 
