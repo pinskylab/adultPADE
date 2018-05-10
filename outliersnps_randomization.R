@@ -953,23 +953,111 @@ sd(simr2.means[,2])
 sd(simr2.means[,3])
 sd(simr2.means[,4])
 
-# R2 averaged through simulations for each locus/environmental variable
+# R2 averaged through/across simulations for each locus/environmental variable
 simr2.sim.means <- apply(simr2.array, c(1,2), mean)
 
-boxplot(simr2.sim.means[,1], main = 'Distance', ylim = c(0,0.5))
+par(mfrow = c(1,4))
+boxplot(simr2.sim.means[,1], main = 'Distance', ylim = c(0,0.5), ylab = expression(paste('mean simulated R'^2, ' (locus basis)')))
+points(mean(dist.obs.r2), col = 'tomato', pch = 19) # observed mean R2
 boxplot(simr2.sim.means[,2], main = 'Depth', ylim = c(0,0.5))
+points(mean(depth.obs.r2), col = 'tomato', pch = 19) # observed mean R2
 boxplot(simr2.sim.means[,3], main = 'Bottom Temp', ylim = c(0,0.5))
+points(mean(btemp.obs.r2), col = 'tomato', pch = 19) # observed mean R2
 boxplot(simr2.sim.means[,4], main = 'Bottom Salin', ylim = c(0,0.5))
+points(mean(bsalin.obs.r2), col = 'tomato', pch = 19) # observed mean R2
+
+sd(simr2.sim.means[,1])
+sd(simr2.sim.means[,2])
+sd(simr2.sim.means[,3])
+sd(simr2.sim.means[,4])
+
+# Plotting SD of 1137 R2 values that have been averaged through the 10 simulations against # of unique values
+plot(c(sd(simr2.sim.means[,1]), sd(simr2.sim.means[,2]), sd(simr2.sim.means[,3]), sd(simr2.sim.means[,4])) ~ c(85, 47, 69, 60), xlab = 'Number of unique values', ylab = expression(paste('SD of simulated R'^2)))
 
 # Mean R2 within an environmental variable & across simulations
 simr2.means.envi <- apply(simr2.array, 2, mean)
 simr2.sd <- apply(simr2.array, 2, sd) # this must be sd across 1137*10 values, instead of 10
 
 # Plot/R2 BFs against R2
-plot(simr2.array[,1,1] ~ all.randomized.medians[,1,1], main = 'Distance')
-summary(lm(simr2.array[,1,] ~ all.randomized.medians[,1,], main = 'Distance'))
+plot(log10(all.randomized.medians[,4,]) ~ log10(simr2.array[,4,]), xlab = 'log10(randomized R2)', ylab = 'log10(randomized BF)')
+plot(log10(all.randomized.medians[,1,1]) ~ log10(simr2.array[,1,1]), xlab = 'randomized R2', ylab = 'randomized BF')
 
-# for loop through each simulation for each environmental variable (40 comparisons)
+# Fit linear regression to untransformed BFs and R2
+for (m in 1:10){
+  assign(paste0('dist',m,'bf'), lm(log10(simr2.array[,1,m]) ~ log10(all.randomized.medians[,'dist',m]))) # fit lm for each bf/r2 pair for distance
+  assign(paste0('depth',m,'bf'), lm(log10(simr2.array[,1,m]) ~ log10(all.randomized.medians[,'depth',m])))
+  assign(paste0('btemp',m,'bf'), lm(log10(simr2.array[,1,m]) ~ log10(all.randomized.medians[,'b_temp',m])))
+  assign(paste0('bsalin',m,'bf'), lm(log10(simr2.array[,1,m]) ~ log10(all.randomized.medians[,'b_salin',m])))
+}
+
+# Plot dist BFs vs R2
+par(mfrow = c(2,2))
+plot(log10(simr2.array[,1,]) ~ log10(all.randomized.medians[,'dist',]), xlab = 'log10(randomized BF)', ylab = 'log10(randomized R2)', main = 'Distance')
+abline(dist1bf, col = 'gray50')
+abline(dist2bf, col = 'gray50')
+abline(dist3bf, col = 'gray50')
+abline(dist4bf, col = 'gray50')
+abline(dist5bf, col = 'gray50')
+abline(dist6bf, col = 'gray50')
+abline(dist7bf, col = 'gray50')
+abline(dist8bf, col = 'gray50')
+abline(dist9bf, col = 'gray50')
+abline(dist10bf, col = 'gray50')
+
+# Plot depth BFs vs R2
+plot(log10(simr2.array[,2,]) ~ log10(all.randomized.medians[,'depth',]), xlab = 'log10(randomized BF)', ylab = 'lgo10(randomized R2)', main = 'Depth')
+abline(depth1bf, col = 'gray50')
+abline(depth2bf, col = 'gray50')
+abline(depth3bf, col = 'gray50')
+abline(depth4bf, col = 'gray50')
+abline(depth5bf, col = 'gray50')
+abline(depth6bf, col = 'gray50')
+abline(depth7bf, col = 'gray50')
+abline(depth8bf, col = 'gray50')
+abline(depth9bf, col = 'gray50')
+abline(depth10bf, col = 'gray50')
+
+# Plot btemp BFs vs R2
+plot(log10(simr2.array[,3,]) ~ log10(all.randomized.medians[,'b_temp',]), xlab = 'log10(randomized BF)', ylab = 'log10(randomized R2)', main = 'Bottom Temp')
+abline(btemp1bf, col = 'gray50')
+abline(btemp2bf, col = 'gray50')
+abline(btemp3bf, col = 'gray50')
+abline(btemp4bf, col = 'gray50')
+abline(btemp5bf, col = 'gray50')
+abline(btemp6bf, col = 'gray50')
+abline(btemp7bf, col = 'gray50')
+abline(btemp8bf, col = 'gray50')
+abline(btemp9bf, col = 'gray50')
+abline(btemp10bf, col = 'gray50')
+
+# Plot btemp BFs vs R2
+plot(log10(simr2.array[,4,]) ~ log10(all.randomized.medians[,'b_salin',]), xlab = 'log10(randomized BF)', ylab = 'log10(randomized R2)', main = 'Bottom Salin')
+abline(bsalin1bf, col = 'gray50')
+abline(bsalin2bf, col = 'gray50')
+abline(bsalin3bf, col = 'gray50')
+abline(bsalin4bf, col = 'gray50')
+abline(bsalin5bf, col = 'gray50')
+abline(bsalin6bf, col = 'gray50')
+abline(bsalin7bf, col = 'gray50')
+abline(bsalin8bf, col = 'gray50')
+abline(bsalin9bf, col = 'gray50')
+abline(bsalin10bf, col = 'gray50')
+
+# Plot mean R2 through simulations against mean BF through simulations
+plot(simr2.sim.means[,1] ~ all.randomized.medians.mean[,1], xlab = 'Mean BF', ylab = 'Mean R2', main = 'Distance')
+lm1 <- lm(simr2.sim.means[,1] ~ all.randomized.medians.mean[,1])
+abline(lm1, col = 'tomato')
+plot(simr2.sim.means[,2] ~ all.randomized.medians.mean[,2], xlab = 'Mean BF', ylab = 'Mean R2', main = 'Depth')
+lm2 <- lm(simr2.sim.means[,2] ~ all.randomized.medians.mean[,2])
+abline(lm2, col = 'tomato')
+plot(simr2.sim.means[,3] ~ all.randomized.medians.mean[,3], xlab = 'Mean BF', ylab = 'Mean R2', main = 'Bottom Temp')
+lm3 <- lm(simr2.sim.means[,3] ~ all.randomized.medians.mean[,3])
+abline(lm3, col = 'tomato')
+plot(simr2.sim.means[,4] ~ all.randomized.medians.mean[,4], xlab = 'Mean BF', ylab = 'Mean R2', main = 'Bottom Salinity')
+lm4 <- lm(simr2.sim.means[,4] ~ all.randomized.medians.mean[,4])
+abline(lm4, col = 'tomato')
+
+# for loop through each simulation for each environmental variable (40 comparisons) to get R2 between BF and R2
 distbf <- vector()
 depthbf <- vector()
 btempbf <- vector()
@@ -1250,6 +1338,29 @@ fake10r2 <- cbind(fake1.10.r2, fake2.10.r2, fake3.10.r2, fake4.10.r2)
 fake.array <- abind(fake1r2, fake2r2, fake3r2, fake4r2, fake5r2, fake6r2, fake7r2, fake8r2, fake9r2, fake10r2, along = 3) #1137 x 4 x 10
 save(fake.array, file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/fake2/locus.fake.rsquared.RData")
 load(file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/fake2/locus.fake.rsquared.RData")
+
+# R2 averaged through/across simulations for each locus/environmental variable
+simr2.sim.means <- apply(fake.array, c(1,2), mean)
+
+par(mfrow = c(1,4))
+boxplot(simr2.sim.means[,1], main = 'Distance', ylim = c(0,0.6), ylab = expression(paste('mean simulated R'^2, ' (locus basis)')))
+points(mean(dist.obs.r2), col = 'tomato', pch = 19) # observed mean R2
+boxplot(simr2.sim.means[,2], main = 'Depth', ylim = c(0,0.6))
+points(mean(depth.obs.r2), col = 'tomato', pch = 19) # observed mean R2
+boxplot(simr2.sim.means[,3], main = 'Bottom Temp', ylim = c(0,0.6))
+points(mean(btemp.obs.r2), col = 'tomato', pch = 19) # observed mean R2
+boxplot(simr2.sim.means[,4], main = 'Bottom Salin', ylim = c(0,0.6))
+points(mean(bsalin.obs.r2), col = 'tomato', pch = 19) # observed mean R2
+
+sd(simr2.sim.means[,1])
+sd(simr2.sim.means[,2])
+sd(simr2.sim.means[,3])
+sd(simr2.sim.means[,4])
+
+# Plotting SD of 1137 R2 values that have been averaged through the 10 simulations against # of unique values
+plot(c(sd(simr2.sim.means[,1]), sd(simr2.sim.means[,2]), sd(simr2.sim.means[,3]), sd(simr2.sim.means[,4])) ~ c(85, 47, 69, 60), xlab = 'Number of unique values', ylab = expression(paste('SD of simulated R'^2)))
+
+
 
 # R2 mean for each environmental variable & simulation (4*10)
 faker2.means <- matrix(ncol = 4, nrow = 10)
