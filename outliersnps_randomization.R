@@ -1141,3 +1141,135 @@ plot(c(sd(faker2.means[,1]), sd(faker2.means[,2]), sd(faker2.means[,3]), sd(fake
 
 faker2.sd <- apply(fake.array, 2, sd) # this must be sd across 1137*10 values, instead of 10
 
+##############################################################################
+#### Try again to make fake data using environmental variable means & SDs ####
+##############################################################################
+setwd("/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation")
+
+# Read in environmental data
+nvs_locs <- read.table("232envirowithdist.txt", header=TRUE) #all 241-9=232 fish divided into 5 populations
+
+# Subset to 4 environmental variables
+envir <- nvs_locs[,c('bayenv_pop', 'dist', 'depth', 'b_temp', 'b_salin')]
+mean(envir$dist)
+mean(envir$depth)
+mean(envir$b_temp)
+mean(envir$b_salin)
+sd(envir$dist)
+sd(envir$depth)
+sd(envir$b_temp)
+sd(envir$b_salin)
+
+#### Generate fake data with different numbers of unique numbers ####
+fake1 <- round(rnorm(85, mean(envir$dist), sd(envir$dist)), 2)
+length(unique(fake1)) # 85
+fake1 <- append(fake1, sample(fake1, 147, replace = TRUE))
+length(fake1)
+
+fake2 <- round(rnorm(47, mean(envir$depth), sd(envir$depth)),2)
+length(unique(fake2)) #47
+fake2 <- append(fake2, sample(fake2, 185, replace = TRUE))
+length(fake2)
+
+fake3 <- round(rnorm(69, mean(envir$b_temp), sd(envir$b_temp)),2)
+length(unique(fake3)) #69
+fake3 <- append(fake3, sample(fake3, 163, replace = TRUE))
+length(fake3)
+
+fake4 <- round(rnorm(65, mean(envir$b_salin), sd(envir$b_salin)),2)
+length(unique(fake4)) #60
+fake4 <- append(fake4, sample(fake4, 167, replace = TRUE))
+length(fake4)
+
+fakes <- cbind(fake1, fake2, fake3, fake4) #232 x 4
+write.table (fakes, "~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/fake2/232fakedata.txt", sep ="\t", col.names = FALSE, row.names = FALSE)
+
+# For loop to randomize, standardize and write 10 fake matrices #
+for (i in 1:10){
+  
+  # Randomize environmental variables
+  fakes.rand <- apply(fakes,2, sample)
+  
+  # Aggregate the individuals into populations and standardize
+  by <- list(c(rep(1,40), rep(2,54), rep(3,41), rep(4,60), rep(5,37))) # generate vector of bayenv pop numbers
+  pop.avg <- aggregate(fakes.rand, by = by, FUN = mean)
+  stan.pop.avg <- scale(pop.avg[,2:5])
+  rownames(stan.pop.avg) <- c("Pop1", "Pop2", "Pop3", "Pop4", "Pop5")
+  t.stan.pop.avg <- t(stan.pop.avg) # the order is Pop1, Pop2, Pop3, Pop4, Pop5; rows are: 85 unique values, 47 unique values, 69 unique values, 60 unique values
+  
+  # Exporting the randomized envirofiles to my computer in a randomization folder
+  write.table (t.stan.pop.avg, paste("~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/fake2/232stanfake", i,".txt", sep = ""), sep ="\t", col.names = FALSE, row.names = FALSE)
+  
+}
+
+# Read in fake data and genetic data
+library(abind)
+
+setwd("~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/fake2")
+list <- list.files(pattern = "232stan*")
+fake_files <- lapply(list, read.table)
+fake_files_array <- array(unlist(fake_files), dim = c(nrow(fake_files[[1]]), ncol(fake_files[[1]]), length(fake_files))) # the columns are Pop1, Pop2, Pop3, Pop4, Pop5; rows are different numbers of unique values; 4 x 5 x 10
+
+genes <- read.table('~/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/232forbayenv.txt')
+
+# Split data into odd and even dataframes
+even_indexes<-seq(2,2274,2)
+odd_indexes<-seq(1,2273,2)
+
+odds <- data.frame(genes[odd_indexes,]) # 1137 x 5
+evens <- data.frame(genes[even_indexes,]) # 1137 x 5
+
+totals <- odds + evens
+
+odds.freqs <- as.matrix(odds/totals) # columns are BayEnv populations, rows are loci
+rownames(odds.freqs) <- 1:1137
+evens.freqs <- as.matrix(evens/totals)
+rownames(evens.freqs) <- 1:1137
+
+# I need to fit a line for each standardized fake dataset & each allele freq, for each environmental variables and simulation (1137*6*10)
+# for loop through each simulation
+n <- 1137
+for (m in 1:10){
+  assign(paste0('fake1.',m,'.r2'), sapply(lapply(1:n, function(x) lm(odds.freqs[x,] ~ fake_files_array[1,,m])), function(x) summary(x)$r.squared)) # extract r2 and fit lm in one step
+  assign(paste0('fake2.',m,'.r2'), sapply(lapply(1:n, function(x) lm(odds.freqs[x,] ~ fake_files_array[2,,m])), function(x) summary(x)$r.squared))
+  assign(paste0('fake3.',m,'.r2'), sapply(lapply(1:n, function(x) lm(odds.freqs[x,] ~ fake_files_array[3,,m])), function(x) summary(x)$r.squared))
+  assign(paste0('fake4.',m,'.r2'), sapply(lapply(1:n, function(x) lm(odds.freqs[x,] ~ fake_files_array[4,,m])), function(x) summary(x)$r.squared))
+}
+
+fake1r2 <- cbind(fake1.1.r2, fake2.1.r2, fake3.1.r2, fake4.1.r2)
+fake2r2 <- cbind(fake1.2.r2, fake2.2.r2, fake3.2.r2, fake4.2.r2)
+fake3r2 <- cbind(fake1.3.r2, fake2.3.r2, fake3.3.r2, fake4.3.r2)
+fake4r2 <- cbind(fake1.4.r2, fake2.4.r2, fake3.4.r2, fake4.4.r2)
+fake5r2 <- cbind(fake1.5.r2, fake2.5.r2, fake3.5.r2, fake4.5.r2)
+fake6r2 <- cbind(fake1.6.r2, fake2.6.r2, fake3.6.r2, fake4.6.r2)
+fake7r2 <- cbind(fake1.7.r2, fake2.7.r2, fake3.7.r2, fake4.7.r2)
+fake8r2 <- cbind(fake1.8.r2, fake2.8.r2, fake3.8.r2, fake4.8.r2)
+fake9r2 <- cbind(fake1.9.r2, fake2.9.r2, fake3.9.r2, fake4.9.r2)
+fake10r2 <- cbind(fake1.10.r2, fake2.10.r2, fake3.10.r2, fake4.10.r2)
+
+fake.array <- abind(fake1r2, fake2r2, fake3r2, fake4r2, fake5r2, fake6r2, fake7r2, fake8r2, fake9r2, fake10r2, along = 3) #1137 x 4 x 10
+save(fake.array, file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/fake2/locus.fake.rsquared.RData")
+load(file = "/Users/jenniferhoey/Documents/Graduate School/Rutgers/Summer Flounder/Analysis/Local adaptation/randomization/fake2/locus.fake.rsquared.RData")
+
+# R2 mean for each environmental variable & simulation (4*10)
+faker2.means <- matrix(ncol = 4, nrow = 10)
+
+for (t in 1:10){
+  faker2.means[t,] <-colMeans(fake.array[,,t])
+}
+
+# Plot boxplots of mean r2 for fake data
+par(mfrow = c(1,4))
+boxplot(faker2.means[,1], ylim = c(0.20, 0.29), main = '85 uniques', ylab = expression(paste('Mean R'^2)))
+boxplot(faker2.means[,2], ylim = c(0.20, 0.29), main = '47 uniques')
+boxplot(faker2.means[,3], ylim = c(0.20, 0.29), main = '69 uniques')
+boxplot(faker2.means[,4], ylim = c(0.20, 0.29), main = '60 uniques')
+
+# How about plots of SD? Removing 'outliers' based on boxplot
+sd(faker2.means[,1])
+sd(faker2.means[,2])
+sd(faker2.means[,3])
+sd(faker2.means[,4])
+
+plot(c(sd(faker2.means[,1]), sd(faker2.means[,2]), sd(faker2.means[,3]), sd(faker2.means[,4])) ~ c(85, 47, 69, 60), xlab = 'Number of unique values', ylab = expression(paste('SD of simulated R'^2)))
+
